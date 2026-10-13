@@ -1,0 +1,17 @@
+package net.mcreator.jujutsucraft.client.renderer;
+
+import net.mcreator.jujutsucraft.client.model.Modelcursedspirit3_8;
+import net.mcreator.jujutsucraft.entity.CursedSpiritGrade38Entity;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+
+public class CursedSpiritGrade38Renderer extends MobRenderer<CursedSpiritGrade38Entity, Modelcursedspirit3_8<CursedSpiritGrade38Entity>> {
+   public CursedSpiritGrade38Renderer(EntityRendererProvider.Context context) {
+      super(context, new Modelcursedspirit3_8(context.m_174023_(Modelcursedspirit3_8.LAYER_LOCATION)), 0.0F);
+   }
+
+   public ResourceLocation getTextureLocation(CursedSpiritGrade38Entity entity) {
+      return new ResourceLocation("jujutsucraft:textures/entities/cursedspirit3_8.png");
+   }
+}

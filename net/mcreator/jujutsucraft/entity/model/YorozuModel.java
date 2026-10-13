@@ -1,0 +1,19 @@
+package net.mcreator.jujutsucraft.entity.model;
+
+import net.mcreator.jujutsucraft.entity.YorozuEntity;
+import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.model.GeoModel;
+
+public class YorozuModel extends GeoModel<YorozuEntity> {
+   public ResourceLocation getAnimationResource(YorozuEntity entity) {
+      return new ResourceLocation("jujutsucraft", "animations/human.animation.json");
+   }
+
+   public ResourceLocation getModelResource(YorozuEntity entity) {
+      return new ResourceLocation("jujutsucraft", "geo/human.geo.json");
+   }
+
+   public ResourceLocation getTextureResource(YorozuEntity entity) {
+      return new ResourceLocation("jujutsucraft", "textures/entities/" + entity.getTexture() + ".png");
+   }
+}

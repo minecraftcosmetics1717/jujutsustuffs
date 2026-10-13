@@ -1,0 +1,17 @@
+package net.mcreator.jujutsucraft.client.renderer;
+
+import net.mcreator.jujutsucraft.client.model.Modelgravestone2;
+import net.mcreator.jujutsucraft.entity.Gravestone2Entity;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+
+public class Gravestone2Renderer extends MobRenderer<Gravestone2Entity, Modelgravestone2<Gravestone2Entity>> {
+   public Gravestone2Renderer(EntityRendererProvider.Context context) {
+      super(context, new Modelgravestone2(context.m_174023_(Modelgravestone2.LAYER_LOCATION)), 0.0F);
+   }
+
+   public ResourceLocation getTextureLocation(Gravestone2Entity entity) {
+      return new ResourceLocation("jujutsucraft:textures/entities/gravestone.png");
+   }
+}

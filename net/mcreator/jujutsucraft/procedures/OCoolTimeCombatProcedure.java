@@ -1,0 +1,33 @@
+package net.mcreator.jujutsucraft.procedures;
+
+import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+
+public class OCoolTimeCombatProcedure {
+   public static String execute(Entity entity) {
+      if (entity == null) {
+         return "";
+      } else {
+         int var10000;
+         label20: {
+            String STR1 = "";
+            double NUM1 = (double)0.0F;
+            if (entity instanceof LivingEntity) {
+               LivingEntity _livEnt = (LivingEntity)entity;
+               if (_livEnt.m_21023_((MobEffect)JujutsucraftModMobEffects.COOLDOWN_TIME_COMBAT.get())) {
+                  var10000 = _livEnt.m_21124_((MobEffect)JujutsucraftModMobEffects.COOLDOWN_TIME_COMBAT.get()).m_19557_();
+                  break label20;
+               }
+            }
+
+            var10000 = 0;
+         }
+
+         double var6 = Math.ceil((double)var10000 * 0.1);
+         String var5 = var6 > (double)0.0F ? "" + Math.round(var6) : "";
+         return var5;
+      }
+   }
+}

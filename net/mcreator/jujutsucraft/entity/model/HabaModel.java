@@ -1,0 +1,19 @@
+package net.mcreator.jujutsucraft.entity.model;
+
+import net.mcreator.jujutsucraft.entity.HabaEntity;
+import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.model.GeoModel;
+
+public class HabaModel extends GeoModel<HabaEntity> {
+   public ResourceLocation getAnimationResource(HabaEntity entity) {
+      return new ResourceLocation("jujutsucraft", "animations/human.animation.json");
+   }
+
+   public ResourceLocation getModelResource(HabaEntity entity) {
+      return new ResourceLocation("jujutsucraft", "geo/human.geo.json");
+   }
+
+   public ResourceLocation getTextureResource(HabaEntity entity) {
+      return new ResourceLocation("jujutsucraft", "textures/entities/" + entity.getTexture() + ".png");
+   }
+}

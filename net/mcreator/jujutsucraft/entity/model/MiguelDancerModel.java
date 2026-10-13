@@ -1,0 +1,19 @@
+package net.mcreator.jujutsucraft.entity.model;
+
+import net.mcreator.jujutsucraft.entity.MiguelDancerEntity;
+import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.model.GeoModel;
+
+public class MiguelDancerModel extends GeoModel<MiguelDancerEntity> {
+   public ResourceLocation getAnimationResource(MiguelDancerEntity entity) {
+      return new ResourceLocation("jujutsucraft", "animations/human.animation.json");
+   }
+
+   public ResourceLocation getModelResource(MiguelDancerEntity entity) {
+      return new ResourceLocation("jujutsucraft", "geo/human.geo.json");
+   }
+
+   public ResourceLocation getTextureResource(MiguelDancerEntity entity) {
+      return new ResourceLocation("jujutsucraft", "textures/entities/" + entity.getTexture() + ".png");
+   }
+}

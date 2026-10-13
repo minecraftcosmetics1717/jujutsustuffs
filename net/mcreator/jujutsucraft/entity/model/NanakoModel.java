@@ -1,0 +1,19 @@
+package net.mcreator.jujutsucraft.entity.model;
+
+import net.mcreator.jujutsucraft.entity.NanakoEntity;
+import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.model.GeoModel;
+
+public class NanakoModel extends GeoModel<NanakoEntity> {
+   public ResourceLocation getAnimationResource(NanakoEntity entity) {
+      return new ResourceLocation("jujutsucraft", "animations/human.animation.json");
+   }
+
+   public ResourceLocation getModelResource(NanakoEntity entity) {
+      return new ResourceLocation("jujutsucraft", "geo/human.geo.json");
+   }
+
+   public ResourceLocation getTextureResource(NanakoEntity entity) {
+      return new ResourceLocation("jujutsucraft", "textures/entities/" + entity.getTexture() + ".png");
+   }
+}
