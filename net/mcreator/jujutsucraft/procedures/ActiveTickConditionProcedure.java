@@ -9,10 +9,10 @@ public class ActiveTickConditionProcedure {
    public static boolean execute(Entity entity) {
       if (entity == null) {
          return false;
-      } else if (entity.getPersistentData().m_128459_("skill") <= (double)-999.0F) {
+      } else if (entity.getPersistentData().getDouble("skill") <= -999.0D) {
          return false;
       } else {
-         return entity instanceof Player ? (Boolean)entity.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, (Direction)null).map((variables) -> variables.PlayerCursePower + variables.PlayerCursePowerChange > (double)0.0F).orElse(false) : true;
+         return entity instanceof Player ? (Boolean)entity.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, (Direction)null).map((variables) -> variables.PlayerCursePower + variables.PlayerCursePowerChange > 0.0D).orElse(false) : true;
       }
    }
 }

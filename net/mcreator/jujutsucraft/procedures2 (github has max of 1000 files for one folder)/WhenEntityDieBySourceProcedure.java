@@ -33,7 +33,7 @@ public class WhenEntityDieBySourceProcedure {
    @SubscribeEvent
    public static void onEntityDeath(LivingDeathEvent event) {
       if (event != null && event.getEntity() != null) {
-         execute(event, event.getEntity().m_9236_(), event.getEntity(), event.getSource().m_7639_());
+         execute(event, event.getEntity().level(), event.getEntity(), event.getSource().getEntity());
       }
 
    }
@@ -49,7 +49,7 @@ public class WhenEntityDieBySourceProcedure {
          String dd = "";
          String MM = "";
          JujutsucraftModVariables.PlayerVariables playerVars = (JujutsucraftModVariables.PlayerVariables)sourceentity.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, (Direction)null).orElse(new JujutsucraftModVariables.PlayerVariables());
-         if (sourceentity instanceof Player && (playerVars.PlayerCurseTechnique == (double)15.0F || playerVars.PlayerCurseTechnique2 == (double)15.0F)) {
+         if (sourceentity instanceof Player && (playerVars.PlayerCurseTechnique == 15.0D || playerVars.PlayerCurseTechnique2 == 15.0D)) {
             MahitoThisEntityKillsAnotherOneProcedure.execute(world, entity, sourceentity);
          }
 
@@ -62,32 +62,32 @@ public class WhenEntityDieBySourceProcedure {
                return;
             }
 
-            if (entity.getPersistentData().m_128471_("CursedSpirit")) {
+            if (entity.getPersistentData().getBoolean("CursedSpirit")) {
                return;
             }
 
-            if (entity.m_6095_().m_204039_(TagKey.m_203882_(Registries.f_256939_, new ResourceLocation("forge:ranged_ammo"))) || entity.m_6095_().m_204039_(TagKey.m_203882_(Registries.f_256939_, new ResourceLocation("forge:not_living")))) {
+            if (entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("forge:ranged_ammo"))) || entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("forge:not_living")))) {
                return;
             }
 
-            if (entity.m_6095_().m_204039_(TagKey.m_203882_(Registries.f_256939_, new ResourceLocation("jujutsucraft:transfigured_human"))) || entity.m_6095_().m_204039_(TagKey.m_203882_(Registries.f_256939_, new ResourceLocation("jujutsucraft:ten_shadows_technique")))) {
+            if (entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jujutsucraft:transfigured_human"))) || entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jujutsucraft:ten_shadows_technique")))) {
                return;
             }
 
-            if (GetEntityFromUUIDProcedure.execute(world, entity.getPersistentData().m_128461_("OWNER_UUID")) instanceof LivingEntity) {
+            if (GetEntityFromUUIDProcedure.execute(world, entity.getPersistentData().getString("OWNER_UUID")) instanceof LivingEntity) {
                return;
             }
 
             yyyy = (new SimpleDateFormat("yyyy")).format(Calendar.getInstance().getTime());
             MM = (new SimpleDateFormat("MM")).format(Calendar.getInstance().getTime());
             dd = (new SimpleDateFormat("dd")).format(Calendar.getInstance().getTime());
-            pattern = Component.m_237115_("jujutsu.message.higuruma_date").getString();
+            pattern = Component.translatable("jujutsu.message.higuruma_date").getString();
             pattern = pattern.replace("yyyy", yyyy).replace("MM", GetMonthProcedure.execute(MM)).replace("dd", dd);
-            sourceentity.getPersistentData().m_128347_("kill_count", sourceentity.getPersistentData().m_128459_("kill_count") + (double)1.0F);
-            if (sourceentity.getPersistentData().m_128459_("kill_count") >= (double)3.0F) {
-               sourceentity.getPersistentData().m_128359_("crime1", Component.m_237115_("jujutsu.message.higuruma10").getString().replace("[guilt]", Component.m_237115_("jujutsu.message.higuruma15").getString()).replace("[date]", pattern));
+            sourceentity.getPersistentData().putDouble("kill_count", sourceentity.getPersistentData().getDouble("kill_count") + 1.0D);
+            if (sourceentity.getPersistentData().getDouble("kill_count") >= 3.0D) {
+               sourceentity.getPersistentData().putString("crime1", Component.translatable("jujutsu.message.higuruma10").getString().replace("[guilt]", Component.translatable("jujutsu.message.higuruma15").getString()).replace("[date]", pattern));
             } else {
-               sourceentity.getPersistentData().m_128359_("crime1", Component.m_237115_("jujutsu.message.higuruma10").getString().replace("[guilt]", Component.m_237115_("jujutsu.message.higuruma14").getString().replace("[entity]", entity.m_5446_().getString())).replace("[date]", pattern));
+               sourceentity.getPersistentData().putString("crime1", Component.translatable("jujutsu.message.higuruma10").getString().replace("[guilt]", Component.translatable("jujutsu.message.higuruma14").getString().replace("[entity]", entity.getName().getString())).replace("[date]", pattern));
             }
          }
 

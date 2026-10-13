@@ -19,28 +19,28 @@ public class AttackStrongProcedure {
       if (entity != null) {
          Entity target = null;
          Entity target_entity = null;
-         double CT2 = (double)0.0F;
-         double CT1 = (double)0.0F;
-         double dis = (double)0.0F;
-         double energyMAX = (double)0.0F;
+         double CT2 = 0.0D;
+         double CT1 = 0.0D;
+         double dis = 0.0D;
+         double energyMAX = 0.0D;
          LivingEntity var10000;
          if (entity instanceof Mob) {
             Mob _mobEnt = (Mob)entity;
-            var10000 = _mobEnt.m_5448_();
+            var10000 = _mobEnt.getTarget();
          } else {
             var10000 = null;
          }
 
          Entity var20 = var10000;
          if (var20 instanceof LivingEntity) {
-            RotateEntityProcedure.execute(((Entity)var20).m_20185_(), ((Entity)var20).m_20186_() + (double)((Entity)var20).m_20206_() * (double)0.5F, ((Entity)var20).m_20189_(), entity);
+            RotateEntityProcedure.execute(var20.getX(), var20.getY() + (double)var20.getBbHeight() * 0.5D, var20.getZ(), entity);
          }
 
-         if (entity.getPersistentData().m_128459_("cnt1") <= (double)7.0F) {
+         if (entity.getPersistentData().getDouble("cnt1") <= 7.0D) {
             if (entity instanceof LivingEntity) {
                LivingEntity _entity = (LivingEntity)entity;
-               if (!_entity.m_9236_().m_5776_()) {
-                  _entity.m_7292_(new MobEffectInstance((MobEffect)JujutsucraftModMobEffects.COOLDOWN_TIME_COMBAT.get(), (int)entity.getPersistentData().m_128459_("COOLDOWN_TICKS"), 1, false, false));
+               if (!_entity.level().isClientSide()) {
+                  _entity.addEffect(new MobEffectInstance((MobEffect)JujutsucraftModMobEffects.COOLDOWN_TIME_COMBAT.get(), (int)entity.getPersistentData().getDouble("COOLDOWN_TICKS"), 1, false, false));
                }
             }
 
@@ -51,73 +51,73 @@ public class AttackStrongProcedure {
                energyMAX = playerVars.PlayerCursePowerMAX;
             }
 
-            if ((CT1 == (double)19.0F || CT2 == (double)19.0F) && LogicStartPassiveProcedure.execute(entity)) {
-               entity.getPersistentData().m_128347_("cnt1", Math.max(entity.getPersistentData().m_128459_("cnt1"), (double)7.0F));
+            if ((CT1 == 19.0D || CT2 == 19.0D) && LogicStartPassiveProcedure.execute(entity)) {
+               entity.getPersistentData().putDouble("cnt1", Math.max(entity.getPersistentData().getDouble("cnt1"), 7.0D));
             }
 
-            if (entity.getPersistentData().m_128459_("cnt1") >= (double)6.0F) {
+            if (entity.getPersistentData().getDouble("cnt1") >= 6.0D) {
                if (entity instanceof Mob) {
                   Mob _mobEnt = (Mob)entity;
-                  var10000 = _mobEnt.m_5448_();
+                  var10000 = _mobEnt.getTarget();
                } else {
                   var10000 = null;
                }
 
                Entity var19 = var10000;
                if (var19 instanceof LivingEntity) {
-                  entity.getPersistentData().m_128379_("PRESS_Z", false);
+                  entity.getPersistentData().putBoolean("PRESS_Z", false);
                   dis = GetDistanceNearestEnemyProcedure.execute(world, entity);
-                  if (dis < (double)4.0F && ((Entity)var19).getPersistentData().m_128459_("skill") == (double)0.0F) {
-                     entity.getPersistentData().m_128379_("PRESS_Z", true);
+                  if (dis < 4.0D && var19.getPersistentData().getDouble("skill") == 0.0D) {
+                     entity.getPersistentData().putBoolean("PRESS_Z", true);
                   }
 
-                  if (entity.getPersistentData().m_128459_("cnt6") >= (double)5.0F) {
-                     entity.getPersistentData().m_128379_("PRESS_Z", false);
+                  if (entity.getPersistentData().getDouble("cnt6") >= 5.0D) {
+                     entity.getPersistentData().putBoolean("PRESS_Z", false);
                   }
                }
 
-               if (entity.getPersistentData().m_128471_("PRESS_Z")) {
-                  entity.getPersistentData().m_128347_("cnt1", Math.min(entity.getPersistentData().m_128459_("cnt1"), (double)6.0F));
+               if (entity.getPersistentData().getBoolean("PRESS_Z")) {
+                  entity.getPersistentData().putDouble("cnt1", Math.min(entity.getPersistentData().getDouble("cnt1"), 6.0D));
                }
 
-               if (entity.getPersistentData().m_128459_("cnt6") < (double)5.0F) {
-                  if (energyMAX >= (double)100.0F) {
-                     ChangeCurseEnergyProcedure.execute(entity, (double)-2.0F);
+               if (entity.getPersistentData().getDouble("cnt6") < 5.0D) {
+                  if (energyMAX >= 100.0D) {
+                     ChangeCurseEnergyProcedure.execute(entity, -2.0D);
                   }
 
                   label95: {
                      label94: {
                         if (entity instanceof Player) {
-                           if (CT1 == (double)12.0F || CT2 == (double)12.0F || CT1 == (double)21.0F || CT2 == (double)21.0F) {
+                           if (CT1 == 12.0D || CT2 == 12.0D || CT1 == 21.0D || CT2 == 21.0D) {
                               break label94;
                            }
                         } else if (entity instanceof IshigoriRyuEntity) {
                            break label94;
                         }
 
-                        entity.getPersistentData().m_128347_("cnt6", entity.getPersistentData().m_128459_("cnt6") + (double)0.125F);
+                        entity.getPersistentData().putDouble("cnt6", entity.getPersistentData().getDouble("cnt6") + 0.125D);
                         break label95;
                      }
 
-                     entity.getPersistentData().m_128347_("cnt6", entity.getPersistentData().m_128459_("cnt6") + (double)0.25F);
+                     entity.getPersistentData().putDouble("cnt6", entity.getPersistentData().getDouble("cnt6") + 0.25D);
                   }
 
-                  if (entity.getPersistentData().m_128459_("cnt6") >= (double)5.0F) {
-                     entity.getPersistentData().m_128347_("cnt6", (double)5.0F);
+                  if (entity.getPersistentData().getDouble("cnt6") >= 5.0D) {
+                     entity.getPersistentData().putDouble("cnt6", 5.0D);
                      if (world instanceof Level) {
                         Level _level = (Level)world;
-                        if (!_level.m_5776_()) {
-                           _level.m_254849_((Entity)null, x, y + (double)entity.m_20206_() * (double)0.5F, z, 0.0F, ExplosionInteraction.NONE);
+                        if (!_level.isClientSide()) {
+                           _level.explode((Entity)null, x, y + (double)entity.getBbHeight() * 0.5D, z, 0.0F, ExplosionInteraction.NONE);
                         }
                      }
                   }
                }
 
-               if (entity.getPersistentData().m_128471_("PRESS_Z")) {
-                  if (entity.getPersistentData().m_128459_("cnt6") >= (double)5.0F) {
-                     ChargeParticleProcedure.execute(world, entity, (double)10.0F);
+               if (entity.getPersistentData().getBoolean("PRESS_Z")) {
+                  if (entity.getPersistentData().getDouble("cnt6") >= 5.0D) {
+                     ChargeParticleProcedure.execute(world, entity, 10.0D);
                   } else {
-                     ChargeParticleProcedure.execute(world, entity, (double)0.0F);
+                     ChargeParticleProcedure.execute(world, entity, 0.0D);
                   }
                }
             }
