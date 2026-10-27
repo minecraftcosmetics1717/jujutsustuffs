@@ -19,196 +19,128 @@ public class LogicConfilmDomainProcedure {
          return false;
       } else {
          boolean use = false;
-         Entity target_entity = null;
-         LivingEntity var10000;
-         if (entity instanceof Mob) {
-            Mob _mobEnt = (Mob)entity;
-            var10000 = _mobEnt.m_5448_();
+         Entity targetEntity = null;
+         
+         // Get the target of the mob, if the entity is a mob
+         if (entity instanceof Mob mobEntity) {
+            targetEntity = mobEntity.getTarget();
+         }
+
+         int domainExpansionAmplifier = 0;
+         int neutralizationAmplifier = 0;
+         int brainDamageAmplifier = 0;
+
+         // Check Sukuna effect conditions between entity and targetEntity
+         boolean hasSukunaEntity = entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JujutsucraftModMobEffects.SUKUNA_EFFECT.get());
+         boolean targetIsGojo = targetEntity instanceof GojoSatoruEntity;
+         boolean targetHasSukuna = targetEntity instanceof LivingEntity livingTarget && livingTarget.hasEffect(JujutsucraftModMobEffects.SUKUNA_EFFECT.get());
+         boolean entityIsGojo = entity instanceof GojoSatoruEntity;
+
+         boolean sukunaGojoCheck = (hasSukunaEntity && targetIsGojo) || (targetHasSukuna && entityIsGojo);
+
+         if (targetEntity instanceof LivingEntity livingTargetEntity) {
+            // Check timers / counters stored in persistent data (NBT tags)
+            double entityCntTarget = entity.getPersistentData().getDouble("cnt_target");
+            double targetCntTarget = targetEntity.getPersistentData().getDouble("cnt_target");
+
+            if (sukunaGojoCheck || (entityCntTarget > 600.0 || targetCntTarget > 600.0)) {
+               boolean entityUnstable = entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JujutsucraftModMobEffects.UNSTABLE.get());
+               boolean targetUnstable = livingTargetEntity.hasEffect(JujutsucraftModMobEffects.UNSTABLE.get());
+
+               if (!entityUnstable && !targetUnstable) {
+                  double entitySkill = entity.getPersistentData().getDouble("skill");
+                  double targetSkill = targetEntity.getPersistentData().getDouble("skill");
+
+                  if (entitySkill == 0.0 && targetSkill == 0.0) {
+                     if (livingTargetEntity.hasEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get())) {
+                        domainExpansionAmplifier = livingTargetEntity.getEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get()).getAmplifier();
+                     } else {
+                        domainExpansionAmplifier = 0;
+                     }
+
+                     if (domainExpansionAmplifier <= 1000) {
+                        use = true;
+                     }
+                  }
+               }
+            }
+         }
+
+         // Check Neutralization effect on the main entity
+         if (entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JujutsucraftModMobEffects.NEUTRALIZATION.get())) {
+            neutralizationAmplifier = livingEntity.getEffect(JujutsucraftModMobEffects.NEUTRALIZATION.get()).getDuration(); // or amplifier depending on mapping context
          } else {
-            var10000 = null;
+            neutralizationAmplifier = 0;
          }
 
-         label197: {
-            label190: {
-               label198: {
-                  var16 = var10000;
-                  if (entity instanceof LivingEntity) {
-                     LivingEntity _livEnt1 = (LivingEntity)entity;
-                     if (_livEnt1.m_21023_((MobEffect)JujutsucraftModMobEffects.SUKUNA_EFFECT.get()) && var16 instanceof GojoSatoruEntity) {
-                        break label198;
-                     }
-                  }
+         if (neutralizationAmplifier > 0) {
+            use = true;
+         }
 
-                  if (!(var16 instanceof LivingEntity)) {
-                     break label190;
-                  }
-
-                  LivingEntity _livEnt3 = var16;
-                  if (!_livEnt3.m_21023_((MobEffect)JujutsucraftModMobEffects.SUKUNA_EFFECT.get()) || !(entity instanceof GojoSatoruEntity)) {
-                     break label190;
-                  }
-               }
-
-               if (var16 instanceof LivingEntity && (entity.getPersistentData().m_128459_("cnt_target") > (double)600.0F || ((Entity)var16).getPersistentData().m_128459_("cnt_target") > (double)600.0F)) {
-                  if (entity instanceof LivingEntity) {
-                     LivingEntity _livEnt8 = (LivingEntity)entity;
-                     if (_livEnt8.m_21023_((MobEffect)JujutsucraftModMobEffects.UNSTABLE.get())) {
-                        break label197;
-                     }
-                  }
-
-                  if (var16 instanceof LivingEntity) {
-                     LivingEntity _livEnt9 = var16;
-                     if (_livEnt9.m_21023_((MobEffect)JujutsucraftModMobEffects.UNSTABLE.get())) {
-                        break label197;
-                     }
-                  }
-
-                  if (entity.getPersistentData().m_128459_("skill") == (double)0.0F && ((Entity)var16).getPersistentData().m_128459_("skill") == (double)0.0F) {
-                     if (var16 instanceof LivingEntity) {
-                        LivingEntity _livEnt12 = var16;
-                        if (_livEnt12.m_21023_((MobEffect)JujutsucraftModMobEffects.DOMAIN_EXPANSION.get())) {
-                           label158: {
-                              if (var16 instanceof LivingEntity) {
-                                 LivingEntity _livEnt = var16;
-                                 if (_livEnt.m_21023_((MobEffect)JujutsucraftModMobEffects.DOMAIN_EXPANSION.get())) {
-                                    var29 = _livEnt.m_21124_((MobEffect)JujutsucraftModMobEffects.DOMAIN_EXPANSION.get()).m_19557_();
-                                    break label158;
-                                 }
-                              }
-
-                              var29 = 0;
-                           }
-
-                           if (var29 <= 1000) {
-                              break label197;
-                           }
-                        }
-                     }
-
-                     use = true;
-                  }
-               }
-               break label197;
+         if (!use && targetEntity instanceof LivingEntity livingTargetEntity) {
+            int targetDomainAmplifier = 0;
+            if (livingTargetEntity.hasEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get())) {
+               targetDomainAmplifier = livingTargetEntity.getEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get()).getAmplifier();
             }
 
-            label151: {
-               if (entity instanceof LivingEntity) {
-                  LivingEntity _livEnt = (LivingEntity)entity;
-                  if (_livEnt.m_21023_((MobEffect)JujutsucraftModMobEffects.NEUTRALIZATION.get())) {
-                     var28 = _livEnt.m_21124_((MobEffect)JujutsucraftModMobEffects.NEUTRALIZATION.get()).m_19564_();
-                     break label151;
-                  }
-               }
-
-               var28 = 0;
+            if (targetDomainAmplifier > 1000 || targetEntity.getPersistentData().getDouble("select") != 0.0 || targetEntity.getPersistentData().getDouble("skill") % 100.0 == 20.0) {
+               use = true;
             }
 
-            if (var28 > 0) {
+            if (entity.getPersistentData().getBoolean("flag_domain")) {
                use = true;
             }
          }
 
-         if (!use) {
-            if (var16 instanceof LivingEntity) {
-               label142: {
-                  if (var16 instanceof LivingEntity) {
-                     LivingEntity _livEnt = var16;
-                     if (_livEnt.m_21023_((MobEffect)JujutsucraftModMobEffects.DOMAIN_EXPANSION.get())) {
-                        var30 = _livEnt.m_21124_((MobEffect)JujutsucraftModMobEffects.DOMAIN_EXPANSION.get()).m_19557_();
-                        break label142;
-                     }
-                  }
-
-                  var30 = 0;
-               }
-
-               if (var30 > 1000 || ((Entity)var16).getPersistentData().m_128459_("select") != (double)0.0F || ((Entity)var16).getPersistentData().m_128459_("skill") % (double)100.0F == (double)20.0F) {
-                  use = true;
-               }
-            }
-
-            if (entity.getPersistentData().m_128471_("flag_domain")) {
-               use = true;
-            }
-         }
-
+         // Validation checks if use is true
          if (use) {
-            label201: {
-               label129: {
-                  if (entity instanceof LivingEntity) {
-                     LivingEntity _livEnt = (LivingEntity)entity;
-                     if (_livEnt.m_21023_((MobEffect)JujutsucraftModMobEffects.BRAIN_DAMAGE.get())) {
-                        var31 = _livEnt.m_21124_((MobEffect)JujutsucraftModMobEffects.BRAIN_DAMAGE.get()).m_19564_();
-                        break label129;
-                     }
-                  }
+            if (entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JujutsucraftModMobEffects.BRAIN_DAMAGE.get())) {
+               brainDamageAmplifier = livingEntity.getEffect(JujutsucraftModMobEffects.BRAIN_DAMAGE.get()).getDuration();
+            } else {
+               brainDamageAmplifier = 0;
+            }
 
-                  var31 = 0;
-               }
+            if (brainDamageAmplifier >= 2) {
+               use = false;
+            }
 
-               if (var31 >= 2) {
-                  use = false;
-               }
+            boolean hasDomainEffect = entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get());
+            boolean hasUnstableEffect = entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JujutsucraftModMobEffects.UNSTABLE.get());
 
-               label202: {
-                  if (entity instanceof LivingEntity) {
-                     LivingEntity _livEnt21 = (LivingEntity)entity;
-                     if (_livEnt21.m_21023_((MobEffect)JujutsucraftModMobEffects.DOMAIN_EXPANSION.get())) {
-                        break label202;
-                     }
-                  }
-
-                  if (!(entity instanceof LivingEntity)) {
-                     break label201;
-                  }
-
-                  LivingEntity _livEnt22 = (LivingEntity)entity;
-                  if (!_livEnt22.m_21023_((MobEffect)JujutsucraftModMobEffects.UNSTABLE.get())) {
-                     break label201;
-                  }
-               }
-
+            if (hasDomainEffect || hasUnstableEffect) {
                use = false;
             }
          }
 
-         if (use && GetDistanceProcedure.execute(entity) > JujutsucraftModVariables.MapVariables.get(world).DomainExpansionRadius - (double)4.0F) {
+         // Check distance against Domain Expansion radius config/variables
+         if (use && GetDistanceProcedure.execute(entity) > JujutsucraftModVariables.MapVariables.get(world).DomainExpansionRadius - 4.0) {
             use = false;
          }
 
-         if (use && entity.getPersistentData().m_128459_("friend_num") != (double)0.0F) {
-            label203: {
-               Vec3 _center = new Vec3(x, y, z);
-               List<Entity> _entfound = world.m_6443_(Entity.class, (new AABB(_center, _center)).m_82400_(JujutsucraftModVariables.MapVariables.get(world).DomainExpansionRadius * (double)2.0F / (double)2.0F), (e) -> true);
-               Iterator var25 = _entfound.iterator();
-
-               while(true) {
-                  if (!var25.hasNext()) {
-                     break label203;
+         // Check friendly fire / ally numbers in the area
+         if (use && entity.getPersistentData().getDouble("friend_num") != 0.0) {
+            Vec3 center = new Vec3(x, y, z);
+            double domainRadius = JujutsucraftModVariables.MapVariables.get(world).DomainExpansionRadius;
+            List<Entity> entityList = world.getEntitiesOfClass(Entity.class, (new AABB(center, center)).inflate(domainRadius * 2.0 / 2.0), e -> true);
+            
+            for (Entity entityIterator : entityList) {
+               if (entity != entityIterator && entity.getPersistentData().getDouble("friend_num") == entityIterator.getPersistentData().getDouble("friend_num")) {
+                  if (entityIterator instanceof LivingEntity livingIterator && livingIterator.hasEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get())) {
+                     use = false;
+                     break;
                   }
 
-                  Entity entityiterator = (Entity)var25.next();
-                  if (entity != entityiterator && entity.getPersistentData().m_128459_("friend_num") == entityiterator.getPersistentData().m_128459_("friend_num")) {
-                     if (entityiterator instanceof LivingEntity) {
-                        LivingEntity _livEnt27 = (LivingEntity)entityiterator;
-                        if (_livEnt27.m_21023_((MobEffect)JujutsucraftModMobEffects.DOMAIN_EXPANSION.get())) {
-                           break;
-                        }
-                     }
-
-                     if (entityiterator.getPersistentData().m_128459_("skill") != (double)0.0F && (entityiterator.getPersistentData().m_128459_("select") != (double)0.0F || entityiterator.getPersistentData().m_128459_("skill") % (double)100.0F == (double)20.0F)) {
-                        break;
-                     }
+                  if (entityIterator.getPersistentData().getDouble("skill") != 0.0 && 
+                     (entityIterator.getPersistentData().getDouble("select") != 0.0 || entityIterator.getPersistentData().getDouble("skill") % 100.0 == 20.0)) {
+                     use = false;
+                     break;
                   }
                }
-
-               use = false;
             }
          }
 
          if (use) {
-            entity.getPersistentData().m_128379_("flag_domain", false);
+            entity.getPersistentData().putBoolean("flag_domain", false);
          }
 
          return use;
